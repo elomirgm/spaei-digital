@@ -783,7 +783,7 @@ const DB={
 
 // ── Helpers integração SEI DIGITAL COE ───────────────────────────────
 function _mapStatus(s){const m={'Em Andamento':'EM ANDAMENTO','Aguardando':'AGUARDANDO','Encerrado':'CONCLUÍDO','Fase Preparatória':'FASE PREPARATÓRIA','Concluído':'CONCLUÍDO'};return m[s]||'EM ANDAMENTO';}
-function _mapUrgencia(u){const m={'Normal':'NORMAL','Urgente':'ALTA','Crítica':'URGENTE'};return m[u]||'NORMAL';}
+function _mapUrgencia(u){const m={'Normal':'BAIXA','Urgente':'ALTA','Crítica':'ALTA','CRÍTICA':'ALTA','URGENTE':'ALTA','NORMAL':'BAIXA'};return m[u]||'BAIXA';}
 // ─────────────────────────────────────────────────────────────────────
 
 // ════════════════════════════════════════════
