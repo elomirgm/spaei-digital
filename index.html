@@ -743,6 +743,33 @@ const DB={
       });
     });
 
+    // ── Integração SEI DIGITAL COE ──────────────────────────────────────
+    // Escuta /spaei-digital/sei-processos/ e exibe no SPAEI DIGITAL
+    _fbDB.ref('/spaei-digital/sei-processos').on('value',snap=>{
+      const raw=snap.exists()?snap.val():{};
+      const arr=Object.entries(raw||{}).map(([fbId,p])=>({
+        id:'SEI-'+fbId,
+        numero:p.numero||'',
+        assunto:p.descricao||p.numero||'(sem descrição)',
+        resp:(p.responsaveis||[]).join(', ')||'—',
+        status:_mapStatus(p.status),
+        prio:_mapUrgencia(p.urgencia),
+        tipo:'EXTERNO',
+        criado:p.atualizadoEm?new Date(p.atualizadoEm).toLocaleDateString('pt-BR'):'—',
+        prazo:p.prazo||'—',
+        unidade:p.unidade||'COE',
+        observacoes:p.observacoes||'',
+        pca:p.pca||null,
+        _seiSync:true,
+      }));
+      _mem['sei_processos']=arr;
+      try{localStorage.setItem(LS_PFX+'sei_processos',JSON.stringify(arr));}catch(e){}
+      if(Auth&&Auth.user&&Nav&&Nav.current==='processos'){
+        try{Render.processos();}catch(e){}
+      }
+    });
+    // ─────────────────────────────────────────────────────────────────────
+
     // Monitor de conexão
     _fbDB.ref('.info/connected').on('value',snap=>{
       if(snap.val()===true){
@@ -753,6 +780,11 @@ const DB={
     });
   },
 };
+
+// ── Helpers integração SEI DIGITAL COE ───────────────────────────────
+function _mapStatus(s){const m={'Em Andamento':'EM ANDAMENTO','Aguardando':'AGUARDANDO','Encerrado':'CONCLUÍDO','Fase Preparatória':'FASE PREPARATÓRIA','Concluído':'CONCLUÍDO'};return m[s]||'EM ANDAMENTO';}
+function _mapUrgencia(u){const m={'Normal':'NORMAL','Urgente':'ALTA','Crítica':'URGENTE'};return m[u]||'NORMAL';}
+// ─────────────────────────────────────────────────────────────────────
 
 // ════════════════════════════════════════════
 // MODAL DE CONFIGURAÇÃO FIREBASE (Admin)
@@ -2086,6 +2118,10 @@ const Render={
   // ── PROCESSOS SEI ──────────────────────────
   processos(){
     const proc=DB.get('processos')||[];
+    // Processos vindos do SEI DIGITAL COE via Firebase
+    const seiProc=(_mem&&_mem['sei_processos'])||(
+      ()=>{try{return JSON.parse(localStorage.getItem(LS_PFX+'sei_processos')||'[]');}catch(e){return [];}}()
+    );
     const user=Auth.user;
     const busca=(DB.get('p_busca')||'').toLowerCase();
     const filtro=DB.get('p_filtro')||'TODOS';
@@ -2094,12 +2130,18 @@ const Render={
       const ok2=!busca||p.assunto.toLowerCase().includes(busca)||p.numero.includes(busca)||p.resp.toLowerCase().includes(busca);
       return ok1&&ok2;
     });
+    const filteredSei=seiProc.filter(p=>{
+      const ok1=filtro==='TODOS'||p.status===filtro;
+      const ok2=!busca||p.assunto.toLowerCase().includes(busca)||p.numero.includes(busca)||p.resp.toLowerCase().includes(busca);
+      return ok1&&ok2;
+    });
+    const totalPend=proc.filter(p=>p.status!=='CONCLUÍDO').length+seiProc.filter(p=>p.status!=='CONCLUÍDO').length;
 
     document.getElementById('s-processos').innerHTML=`
       <div class="sec-head">
         <div>
           <div class="sec-title">Processos SEI</div>
-          <div class="sec-sub">${proc.length} processo(s) · ${proc.filter(p=>p.status!=='CONCLUÍDO').length} pendente(s)</div>
+          <div class="sec-sub">${proc.length+seiProc.length} processo(s) · ${totalPend} pendente(s)${seiProc.length>0?` <span style="color:var(--gold);font-size:.75rem">· ${seiProc.length} via SEI DIGITAL COE</span>`:''}</div>
         </div>
         ${user.admin?`<button class="btn btn-primary" onclick="Render._novoProc()">➕ Novo Processo</button>`:''}
       </div>
@@ -2112,8 +2154,8 @@ const Render={
           `<button class="filter-btn${filtro===s?' on':''}" onclick="DB.set('p_filtro','${s}');Render.processos()">${s}</button>`
         ).join('')}
       </div>
-      ${filtered.length===0?`<div class="empty"><span class="empty-ico">📋</span>Nenhum processo encontrado.</div>`:
-      filtered.map(p=>{const c=PR_CFG[p.status]||{};const pi=PI_CFG[p.prio]||{};return`
+      ${filtered.length===0&&filteredSei.length===0?`<div class="empty"><span class="empty-ico">📋</span>Nenhum processo encontrado.</div>`:
+      (filtered.length>0?filtered.map(p=>{const c=PR_CFG[p.status]||{};const pi=PI_CFG[p.prio]||{};return`
         <div class="proc-card">
           <div class="proc-bar" style="background:${c.cor||'#888'}"></div>
           <div class="proc-body">
@@ -2134,7 +2176,34 @@ const Render={
             <button class="btn btn-ghost btn-sm" onclick="Render._editProc('${p.id}')" style="padding:5px 7px">✏️</button>
             <button class="btn btn-danger btn-sm" onclick="Render._delProc('${p.id}')" style="padding:5px 7px">🗑️</button>
           </div>`:''}
-        </div>`}).join('')}`;
+        </div>`}).join(''):'')}
+      ${filteredSei.length>0?`
+        <div style="margin:20px 0 10px;display:flex;align-items:center;gap:10px">
+          <div style="flex:1;height:1px;background:rgba(200,153,26,0.3)"></div>
+          <span style="color:var(--gold);font-size:.8rem;font-weight:600;white-space:nowrap">🔗 RECEBIDOS DO SEI DIGITAL COE (${filteredSei.length})</span>
+          <div style="flex:1;height:1px;background:rgba(200,153,26,0.3)"></div>
+        </div>
+        ${filteredSei.map(p=>{const c=PR_CFG[p.status]||{};const pi=PI_CFG[p.prio]||{};return`
+        <div class="proc-card" style="border-left:3px solid var(--gold);opacity:.95">
+          <div class="proc-bar" style="background:var(--gold)"></div>
+          <div class="proc-body">
+            <div class="proc-tags">
+              <span class="pill ${c.cls||''}">${p.status}</span>
+              <span class="pill ${pi.cls||''}">${p.prio}</span>
+              <span class="pill" style="background:rgba(200,153,26,.15);color:var(--gold);border:1px solid rgba(200,153,26,.3)">🔗 SEI DIGITAL</span>
+              ${p.unidade?`<span class="pill" style="background:var(--hover);color:var(--muted)">${p.unidade}</span>`:''}
+            </div>
+            <div class="proc-num">${escHtml(p.numero)}</div>
+            <div class="proc-title">${escHtml(p.assunto)}</div>
+            <div class="proc-meta">
+              <span>👤 ${escHtml(p.resp)}</span>
+              <span>📅 Atualizado: ${escHtml(p.criado)}</span>
+              <span>⏰ Prazo: ${escHtml(p.prazo)}</span>
+            </div>
+            ${p.observacoes?`<div style="margin-top:6px;font-size:.78rem;color:var(--muted);font-style:italic">${escHtml(p.observacoes)}</div>`:''}
+          </div>
+        </div>`}).join('')}
+      `:''}`;
   },
 
   _novoProc(){
