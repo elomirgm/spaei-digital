@@ -484,8 +484,26 @@ tr:hover td{background:var(--hover)}
 @keyframes pulseGreen{0%,100%{opacity:1}50%{opacity:.5}}
 .live-dot{width:7px;height:7px;border-radius:50%;background:#00C87A;display:inline-block;animation:pulseGreen 1.5s infinite;margin-right:4px;flex-shrink:0}
 
-/* ── MOBILE ── */
-@media(max-width:768px){
+/* ── DESKTOP (≥900px) — sempre sidebar + main ── */
+@media(min-width:900px){
+  #app{display:flex!important;flex-direction:row!important}
+  #sidebar{position:static!important;left:0!important;width:255px!important;display:flex!important}
+  .sb-overlay{display:none!important}
+  body.member-mode #sidebar{display:flex!important}
+  body.member-mode #app{flex-direction:row!important}
+  body.member-mode #main{width:auto!important;max-width:none!important;margin:0!important;flex:1!important}
+  body.member-mode #content{padding:18px!important;padding-bottom:18px!important}
+  body.member-mode #bottom-nav{display:none!important}
+  body.member-mode .tb-menu{display:none!important}
+  body.member-mode #topbar{height:56px!important;padding:0 18px!important}
+  body.member-mode #tb-title{font-size:17px!important}
+  body.member-mode input,body.member-mode select{min-height:unset!important;font-size:13px!important}
+  body.member-mode button{min-height:unset!important}
+  body.member-mode .mini-stat-row{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important}
+}
+
+/* ── TABLET/MOBILE ── */
+@media(max-width:899px){
   #sidebar{position:fixed;top:0;bottom:0;left:-260px;z-index:200}
   #sidebar.open{left:0;box-shadow:6px 0 24px rgba(0,0,0,.5)}
   .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
@@ -2093,7 +2111,11 @@ function buildNav(){
 
   const nav=document.getElementById('sb-nav');
   const isAdmin=Auth.user?.admin;
-  const items=NAV_ITEMS.filter(n=>!n.memberOnly).filter(n=>!n.admin||isAdmin);
+  const isMemberMode=document.body.classList.contains('member-mode');
+  // Em desktop (sem member-mode), mostra Perfil na sidebar também
+  const items=NAV_ITEMS
+    .filter(n=>!n.memberOnly||!isMemberMode) // em desktop mostra perfil
+    .filter(n=>!n.admin||isAdmin);
   let html='<div class="nav-sec">OPERACIONAL</div>';
   ['dashboard','folgas','processos'].forEach(id=>{
     const n=items.find(x=>x.id===id);if(!n)return;
@@ -2113,6 +2135,12 @@ function buildNav(){
     html+='<div class="nav-sec">ADMINISTRAÇÃO</div>';
     const n=items.find(x=>x.id==='admin');
     if(n)html+=`<button class="nav-btn${Nav.current==='admin'?' active':''}" data-nav="admin" onclick="Nav.go('admin')"><span class="nav-icon">${n.ico}</span><span style="flex:1">${n.lbl}</span></button>`;
+  }
+  // Em desktop, membros veem Meu Perfil na sidebar
+  if(!isMemberMode){
+    html+='<div class="nav-sec">CONTA</div>';
+    const np=items.find(x=>x.id==='perfil');
+    if(np)html+=`<button class="nav-btn${Nav.current==='perfil'?' active':''}" data-nav="perfil" onclick="Nav.go('perfil')"><span class="nav-icon">${np.ico}</span><span style="flex:1">${np.lbl}</span></button>`;
   }
   nav.innerHTML=html;
   buildBottomNav(nl);
@@ -3923,6 +3951,17 @@ const Render={
 // APP INICIALIZAÇÃO
 // ════════════════════════════════════════════
 const App={
+  _applyLayout(){
+    const u=Auth.user;
+    if(!u)return;
+    const isAdmin=u.admin||u.chefe;
+    // Membro em desktop: usa sidebar completa (sem member-mode)
+    const isMobileScreen=window.innerWidth<900;
+    const needMemberMode=!isAdmin&&isMobileScreen;
+    document.body.classList.toggle('member-mode',needMemberMode);
+    // Reconstrói nav sempre que o layout muda
+    buildNav&&buildNav();
+  },
   init(){
     // Sidebar info usuário
     const u=Auth.user;
@@ -3931,9 +3970,12 @@ const App={
     document.getElementById('sb-nome').textContent=u.nome.split(' ').slice(0,2).join(' ');
     const adm=document.getElementById('sb-adm');
     adm.style.display=u.admin?'block':'none';
-    // ── Layout adaptativo: ADM = desktop completo | Membro = mobile-first (Instagram) ──
-    const isMember=!u.admin&&!u.chefe;
-    document.body.classList.toggle('member-mode',isMember);
+    // ── Layout adaptativo ──────────────────────────────────────────────────────────────────
+    // ADM/Chefe → sempre desktop (sidebar + main)
+    // Membro em tela larga (≥900px) → desktop com sidebar
+    // Membro em tela pequena (<900px) → mobile Instagram (bottom-nav)
+    App._applyLayout();
+    window.addEventListener('resize', ()=>App._applyLayout(), {passive:true});
     // Inicializar Motor (gera semanas se necessário)
     Motor.tick();
     // Inicializar Relógio em Tempo Real
