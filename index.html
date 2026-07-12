@@ -486,7 +486,8 @@ tr:hover td{background:var(--hover)}
 
 /* ── DESKTOP (≥900px) — sempre sidebar + main ── */
 @media(min-width:900px){
-  #app{display:flex!important;flex-direction:row!important}
+  /* display do #app controlado pelo JS; só forçamos a direção em desktop */
+  #app{flex-direction:row!important}
   #sidebar{position:static!important;left:0!important;width:255px!important;display:flex!important}
   .sb-overlay{display:none!important}
   body.member-mode #sidebar{display:flex!important}
@@ -523,6 +524,7 @@ body.member-mode .sb-overlay,
 body.member-mode .tb-menu,
 body.member-mode #tb-clock{display:none!important}
 
+/* member-mode mobile: coluna vertical para feed estilo Instagram */
 body.member-mode #app{flex-direction:column}
 body.member-mode #main{width:100%;max-width:520px;margin:0 auto}
 
@@ -1336,8 +1338,9 @@ function statCard(ico,lbl,val,cor,sub,drawerKey){
       ${sub?`<div class="stat-sub">${sub}</div>`:''}
     </div>
     ${drawerKey?`<div style="font-size:18px;color:${cor};opacity:.5;flex-shrink:0">›</div>`:''}
-  </div>\`;
+  </div>`;
 }
+
 // ════════════════════════════════════════════
 // DRAWER KPI — painel lateral de detalhamento
 // ════════════════════════════════════════════
