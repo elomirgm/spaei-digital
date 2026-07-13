@@ -509,7 +509,7 @@ tr:hover td{background:var(--hover)}
   #sidebar.open{left:0;box-shadow:6px 0 24px rgba(0,0,0,.5)}
   .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
   .sb-overlay.open{display:block}
-  #content{padding:12px}
+  #content{padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
   .plan-week{grid-template-columns:repeat(7,1fr);gap:3px}
   .mini-stat-row{grid-template-columns:repeat(3,1fr)}
   #tb-clock-date,#tb-clock-semana{display:none}
