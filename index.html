@@ -32,7 +32,7 @@
 :root{
   /* ── PALETA TÁTICA DARK (padrão) ── */
   --az:#1A5FFF;--azm:#2A6FFF;--azcl:rgba(26,95,255,0.14);
-  --ou:#C8991A;--oucl:rgba(200,153,26,0.13);
+  --ou:#C8991A;--oucl:rgba(200,153,26,0.13);--gold:#C8991A;
   --vd:#00C87A;--vdcl:rgba(0,200,122,0.13);
   --vm:#FF3D3D;--vmcl:rgba(255,61,61,0.13);
   --am:#FF8C00;--amcl:rgba(255,140,0,0.13);
@@ -1181,7 +1181,7 @@ const DB={
       }));
       _mem['sei_processos']=arr;
       try{localStorage.setItem(LS_PFX+'sei_processos',JSON.stringify(arr));}catch(e){}
-      if(Auth&&Auth.user&&Nav&&(Nav.current==='processos'||Nav.current==='dashboard')){
+      if(Auth&&Auth.user&&Nav&&(Nav.current==='processos'||Nav.current==='dashboard'||Nav.current==='dashproc')){
         try{Render[Nav.current]();}catch(e){}
       }
     });
@@ -2404,7 +2404,7 @@ function buildNav(){
     html+=`<button class="nav-btn${Nav.current===n.id?' active':''}" data-nav="${n.id}" onclick="Nav.go('${n.id}')"><span class="nav-icon">${n.ico}</span><span style="flex:1">${n.lbl}</span>${n.badge&&nl>0?`<span class="nav-badge">${nl}</span>`:''}</button>`;
   });
   html+='<div class="nav-sec">ANÁLISE</div>';
-  ['relatorios'].forEach(id=>{
+  ['relatorios','dashproc'].forEach(id=>{
     const n=items.find(x=>x.id===id);if(!n)return;
     html+=`<button class="nav-btn${Nav.current===n.id?' active':''}" data-nav="${n.id}" onclick="Nav.go('${n.id}')"><span class="nav-icon">${n.ico}</span><span style="flex:1">${n.lbl}</span></button>`;
   });
@@ -4478,12 +4478,20 @@ Render.dashproc = function(){
       return slice;
     });
     function polar(a,r){return{x:CX+r*Math.cos(a),y:CY+r*Math.sin(a)};}
+    // Se um único slice tem sweep ≈ 2π, SVG não suporta arco completo — usar dois meios-arcos
     const paths = slices.map(sl=>{
       if(sl.sweep<0.01) return '';
+      const col=STATUS_COLORS[sl.s]||'#888';
+      if(sl.sweep>=2*Math.PI-0.01){
+        // Círculo completo: desenhar como dois semicírculos
+        const top=polar(sl.start,R),bot=polar(sl.start+Math.PI,R);
+        const ti=polar(sl.start,26),bi=polar(sl.start+Math.PI,26);
+        return `<path d="M${top.x},${top.y} A${R},${R} 0 1 1 ${bot.x},${bot.y} A${R},${R} 0 1 1 ${top.x},${top.y} M${ti.x},${ti.y} A26,26 0 1 0 ${bi.x},${bi.y} A26,26 0 1 0 ${ti.x},${ti.y} Z"
+          fill="${col}" opacity="0.9" stroke="var(--card)" stroke-width="1.5"/>`;
+      }
       const s=polar(sl.start,R),e=polar(sl.start+sl.sweep,R);
       const s2=polar(sl.start,26),e2=polar(sl.start+sl.sweep,26);
       const lg=sl.sweep>Math.PI?1:0;
-      const col=STATUS_COLORS[sl.s]||'#888';
       return `<path d="M${s.x},${s.y} A${R},${R} 0 ${lg} 1 ${e.x},${e.y} L${e2.x},${e2.y} A26,26 0 ${lg} 0 ${s2.x},${s2.y} Z"
         fill="${col}" opacity="0.9" stroke="var(--card)" stroke-width="1.5"/>`;
     });
@@ -4518,7 +4526,7 @@ Render.dashproc = function(){
             <span class="dp-bar-n">${v}</span>
           </div>
         </div>
-        <span class="dp-bar-pct">${Math.round((v/todos.length||1)*100)}%</span>
+        <span class="dp-bar-pct">${Math.round((v/(todos.length||1))*100)}%</span>
       </div>`;
     }).join('');
   }
