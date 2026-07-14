@@ -699,6 +699,118 @@ body.member-mode #bottom-nav{display:flex}
 .stat-card.clickable:hover{border-color:var(--az);box-shadow:0 8px 28px rgba(26,95,255,.2)}
 @media(max-width:600px){#drw-panel{width:100%;max-width:100%;right:-100%}}
 
+
+/* ══════════════════════════════════════════════════
+   DASHBOARD DE PROCESSOS — CSS
+══════════════════════════════════════════════════ */
+.dp-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(138px,1fr));gap:10px;margin-bottom:16px}
+.dp-kpi{background:var(--card);border:1px solid var(--border2);border-radius:13px;padding:14px 16px;
+  cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+.dp-kpi:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);border-color:var(--az)}
+.dp-kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.dp-kpi-val{font-family:'Rajdhani',sans-serif;font-size:34px;font-weight:800;line-height:1;color:#FFF}
+.dp-kpi-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-top:4px}
+.dp-kpi-sub{font-size:9px;color:var(--muted);margin-top:3px;opacity:.8}
+.dp-kpi-ico{font-size:22px;margin-bottom:6px}
+
+.dp-chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+@media(max-width:820px){.dp-chart-grid{grid-template-columns:1fr}}
+.dp-chart-box{background:var(--card);border:1px solid var(--border2);border-radius:13px;padding:16px}
+.dp-chart-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.dp-chart-box svg{display:block;width:100%;overflow:visible}
+
+/* barras horizontais */
+.dp-bar-row{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.dp-bar-lbl{font-size:11px;color:var(--text);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dp-bar-bg{flex:1;background:rgba(255,255,255,.05);border-radius:5px;height:20px;overflow:hidden;position:relative}
+.dp-bar-fill{height:100%;border-radius:5px;display:flex;align-items:center;padding:0 8px;transition:width .6s ease}
+.dp-bar-n{font-size:10px;font-weight:700;color:#FFF}
+.dp-bar-pct{font-size:10px;color:var(--muted);margin-left:6px;flex-shrink:0;min-width:30px;text-align:right}
+
+/* cards de processo (dashboard) */
+.dp-proc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-top:14px}
+@media(max-width:760px){.dp-proc-grid{grid-template-columns:1fr}}
+.dp-proc-card{background:var(--card);border:1px solid var(--border2);border-radius:13px;
+  overflow:hidden;cursor:pointer;transition:all .18s;position:relative}
+.dp-proc-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);border-color:var(--az)}
+.dp-proc-card-top{display:flex;gap:0;align-items:stretch}
+.dp-proc-card-stripe{width:5px;flex-shrink:0}
+.dp-proc-card-body{flex:1;padding:13px 14px}
+.dp-proc-card-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:4px;letter-spacing:.5px}
+.dp-proc-card-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:8px}
+.dp-proc-card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.dp-proc-card-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:11px;color:var(--muted)}
+.dp-proc-card-meta span{display:flex;align-items:center;gap:4px}
+.dp-proc-card-footer{padding:9px 14px;border-top:1px solid var(--border);background:rgba(0,0,0,.12);
+  display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dp-proc-card-resp{font-size:11px;font-weight:700;color:var(--cyan)}
+.dp-prazo-urgente{background:rgba(255,61,61,.1);color:#FF3D3D;border:1px solid rgba(255,61,61,.3);
+  border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700}
+.dp-prazo-alerta{background:rgba(255,140,0,.1);color:#FF8C00;border:1px solid rgba(255,140,0,.3);
+  border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700}
+.dp-prazo-ok{background:rgba(0,200,122,.1);color:#00C87A;border:1px solid rgba(0,200,122,.3);
+  border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700}
+
+/* timeline no modal */
+.dp-timeline{margin:14px 0}
+.dp-tl-item{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
+.dp-tl-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:0}
+.dp-tl-dot{width:12px;height:12px;border-radius:50%;border:2px solid;flex-shrink:0;margin-top:2px}
+.dp-tl-line{flex:1;width:2px;background:var(--border2);min-height:16px}
+.dp-tl-content{flex:1}
+.dp-tl-label{font-size:12px;font-weight:700;color:var(--text)}
+.dp-tl-date{font-size:10px;color:var(--muted);margin-top:2px}
+.dp-tl-obs{font-size:11px;color:var(--muted);margin-top:3px;font-style:italic}
+
+/* alerta cards */
+.dp-alert-row{padding:10px 13px;border-radius:9px;margin-bottom:7px;display:flex;align-items:flex-start;gap:10px}
+.dp-alert-row.dp-al-critico{background:rgba(255,61,61,.07);border:1px solid rgba(255,61,61,.28)}
+.dp-alert-row.dp-al-atencao{background:rgba(255,140,0,.07);border:1px solid rgba(255,140,0,.25)}
+.dp-alert-row.dp-al-info{background:rgba(26,95,255,.07);border:1px solid rgba(26,95,255,.22)}
+.dp-alert-ico{font-size:16px;flex-shrink:0;margin-top:1px}
+.dp-alert-title{font-size:12px;font-weight:700;color:var(--text)}
+.dp-alert-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* sla gauge */
+.dp-sla-ring{display:flex;align-items:center;justify-content:center;position:relative;margin:6px auto}
+.dp-sla-pct{position:absolute;font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:800;color:#FFF;text-align:center;line-height:1}
+.dp-sla-lbl{font-size:9px;color:var(--muted);font-weight:700;margin-top:2px}
+
+/* responsável carga */
+.dp-resp-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;margin-bottom:4px;background:var(--card2);border:1px solid var(--border)}
+.dp-resp-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:12px;flex-shrink:0}
+.dp-resp-nome{font-size:12px;font-weight:700;color:var(--text);flex:1}
+.dp-resp-count{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--cyan)}
+.dp-resp-minibar{height:4px;border-radius:3px;margin-top:4px;transition:width .6s}
+
+/* linha separadora de seção */
+.dp-section-head{display:flex;align-items:center;gap:12px;margin:20px 0 12px}
+.dp-section-head h3{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:#FFF;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.dp-section-line{flex:1;height:1px;background:var(--border2)}
+.dp-section-badge{background:rgba(26,95,255,.15);border:1px solid rgba(26,95,255,.3);
+  color:var(--cyan);border-radius:20px;padding:2px 10px;font-size:9px;font-weight:700}
+
+/* filtros dashboard */
+.dp-filter-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.dp-filter-sel{padding:7px 10px;border-radius:8px;border:1px solid var(--border2);
+  background:var(--card2);color:var(--text);font-size:11px;font-weight:700;outline:none;cursor:pointer}
+.dp-search{display:flex;align-items:center;gap:7px;background:var(--card2);border:1px solid var(--border2);
+  border-radius:9px;padding:7px 12px;flex:1;min-width:180px}
+.dp-search input{border:none;background:none;outline:none;color:var(--text);font-size:12px;width:100%}
+.dp-search input::placeholder{color:var(--muted);opacity:.6}
+
+/* modal detalhe processo */
+.dp-detail-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:4px}
+.dp-detail-title{font-size:15px;font-weight:700;color:#FFF;margin-bottom:12px;line-height:1.4}
+.dp-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+@media(max-width:500px){.dp-detail-grid{grid-template-columns:1fr}}
+.dp-detail-field{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:9px 11px}
+.dp-detail-field-lbl{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
+.dp-detail-field-val{font-size:13px;font-weight:700;color:var(--text)}
+
 </style>
 </head>
 <body>
@@ -820,6 +932,7 @@ body.member-mode #bottom-nav{display:flex}
       <div id="s-dashboard" class="screen active"></div>
       <div id="s-folgas"    class="screen"></div>
       <div id="s-processos" class="screen"></div>
+      <div id="s-dashproc"  class="screen"></div>
       <div id="s-avisos"    class="screen"></div>
       <div id="s-relatorios"class="screen"></div>
       <div id="s-admin"     class="screen"></div>
@@ -2231,6 +2344,7 @@ const NAV_ITEMS=[
   {id:'dashboard', lbl:'Dashboard',        ico:'🏠'},
   {id:'folgas',    lbl:'Escala de Folgas', ico:'📅'},
   {id:'processos', lbl:'Processos SEI',    ico:'📋'},
+  {id:'dashproc',  lbl:'Dashboard de Processos', ico:'📊'},
   {id:'avisos',    lbl:'Avisos',           ico:'🔔',badge:true},
   {id:'relatorios',lbl:'Relatórios',       ico:'📊'},
   {id:'admin',     lbl:'Painel Admin',     ico:'⚙️',admin:true},
@@ -4216,6 +4330,572 @@ document.addEventListener('DOMContentLoaded',async ()=>{
     App.init();
   }
 });
+
+// ══════════════════════════════════════════════════════════════════════════
+//  RENDER.DASHPROC — Dashboard de Processos v1.0
+// ══════════════════════════════════════════════════════════════════════════
+Render.dashproc = function(){
+  const user = Auth.user;
+  const proc = DB.get('processos') || [];
+  const sei  = getSeiProcs();
+  const todos = [
+    ...proc.map(p=>({...p,_src:'LOCAL'})),
+    ...sei.map(p=>({...p,_src:'SEI'}))
+  ];
+
+  // ── helpers de data ────────────────────────────────────────────────────
+  function parsePrazo(s){
+    if(!s) return null;
+    const p = s.split('/');
+    if(p.length===3) return new Date(+p[2], +p[1]-1, +p[0]);
+    return null;
+  }
+  function diasRestantes(prazoStr, status){
+    if(status==='CONCLUÍDO') return null;
+    const d = parsePrazo(prazoStr);
+    if(!d) return null;
+    const hoje = new Date(); hoje.setHours(0,0,0,0);
+    return Math.round((d-hoje)/(1000*60*60*24));
+  }
+  function prazoPillDash(dias){
+    if(dias===null) return '';
+    if(dias<0)  return `<span class="dp-prazo-urgente">⛔ ${Math.abs(dias)}d atrasado</span>`;
+    if(dias<=7) return `<span class="dp-prazo-alerta">⚠️ ${dias}d restantes</span>`;
+    return `<span class="dp-prazo-ok">✅ ${dias}d restantes</span>`;
+  }
+
+  // ── KPIs ───────────────────────────────────────────────────────────────
+  const total    = todos.length;
+  const ativos   = todos.filter(p=>p.status==='EM ANDAMENTO').length;
+  const fase     = todos.filter(p=>p.status==='FASE PREPARATÓRIA').length;
+  const aguard   = todos.filter(p=>p.status==='AGUARDANDO').length;
+  const concl    = todos.filter(p=>p.status==='CONCLUÍDO').length;
+  const altaPrio = todos.filter(p=>p.prio==='ALTA'&&p.status!=='CONCLUÍDO').length;
+  const atrasados= todos.filter(p=>{const d=diasRestantes(p.prazo,p.status);return d!==null&&d<0;}).length;
+  const venceSoon= todos.filter(p=>{const d=diasRestantes(p.prazo,p.status);return d!==null&&d>=0&&d<=7;}).length;
+  const pendente = todos.filter(p=>p.status!=='CONCLUÍDO').length;
+  const slaOk    = pendente>0 ? Math.round(((pendente-atrasados)/pendente)*100) : 100;
+
+  // ── Agrupamentos ───────────────────────────────────────────────────────
+  const porStatus = {};
+  todos.forEach(p=>{ porStatus[p.status]=(porStatus[p.status]||0)+1; });
+
+  const porTipo = {};
+  todos.forEach(p=>{ const t=p.tipo||'OUTROS'; porTipo[t]=(porTipo[t]||0)+1; });
+
+  const porResp = {};
+  todos.forEach(p=>{ const r=p.resp||'—'; porResp[r]=(porResp[r]||0)+1; });
+
+  const MESES_PT=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const porMes = {};
+  todos.forEach(p=>{
+    const dt = parsePrazo(p.criado);
+    if(dt){ const k=MESES_PT[dt.getMonth()]; porMes[k]=(porMes[k]||0)+1; }
+  });
+
+  // ── Filtros persistidos ─────────────────────────────────────────────────
+  const fStatus = DB.get('dp_fstatus')||'TODOS';
+  const fPrio   = DB.get('dp_fprio')||'TODOS';
+  const fTipo   = DB.get('dp_ftipo')||'TODOS';
+  const fBusca  = DB.get('dp_busca')||'';
+
+  const filtrados = todos.filter(p=>{
+    if(fStatus!=='TODOS'&&p.status!==fStatus) return false;
+    if(fPrio!=='TODOS'&&p.prio!==fPrio) return false;
+    if(fTipo!=='TODOS'&&(p.tipo||'OUTROS')!==fTipo) return false;
+    if(fBusca){
+      const b=fBusca.toLowerCase();
+      if(!p.assunto.toLowerCase().includes(b)&&!p.numero.includes(b)&&!(p.resp||'').toLowerCase().includes(b)) return false;
+    }
+    return true;
+  });
+
+  // ── Alertas ─────────────────────────────────────────────────────────────
+  const alertas = [];
+  todos.filter(p=>p.status!=='CONCLUÍDO').forEach(p=>{
+    const d = diasRestantes(p.prazo,p.status);
+    if(d!==null&&d<0)  alertas.push({tipo:'critico',p,d});
+    else if(d!==null&&d<=7) alertas.push({tipo:'atencao',p,d});
+  });
+  alertas.sort((a,b)=>a.d-b.d);
+
+  // ── Gráfico linha (SVG) — evolução mensal ──────────────────────────────
+  function svgLine(){
+    const mesesAtivos = MESES_PT.filter(m=>porMes[m]);
+    const all = MESES_PT.slice(0,7); // Jan..Jul (janela do ano)
+    const vals = all.map(m=>porMes[m]||0);
+    const maxV = Math.max(...vals,1);
+    const W=320,H=100,PAD_L=28,PAD_B=18,PAD_T=10,PAD_R=10;
+    const cw=W-PAD_L-PAD_R, ch=H-PAD_T-PAD_B;
+    const pts = vals.map((v,i)=>({
+      x: PAD_L + (i/(all.length-1||1))*cw,
+      y: PAD_T + ch - (v/maxV)*ch
+    }));
+    const path = pts.map((p,i)=>i===0?`M${p.x},${p.y}`:`L${p.x},${p.y}`).join(' ');
+    const area = `M${pts[0].x},${PAD_T+ch} `+pts.map(p=>`L${p.x},${p.y}`).join(' ')+` L${pts[pts.length-1].x},${PAD_T+ch} Z`;
+    return `<svg viewBox="0 0 ${W} ${H}" style="height:110px">
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1A5FFF" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#1A5FFF" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- grid -->
+      ${[0,0.5,1].map(f=>{
+        const y=PAD_T+ch*(1-f);
+        return `<line x1="${PAD_L}" y1="${y}" x2="${W-PAD_R}" y2="${y}" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+                <text x="${PAD_L-4}" y="${y+4}" font-size="8" fill="rgba(255,255,255,.3)" text-anchor="end">${Math.round(maxV*f)}</text>`;
+      }).join('')}
+      <!-- área preenchida -->
+      <path d="${area}" fill="url(#lg1)"/>
+      <!-- linha -->
+      <path d="${path}" fill="none" stroke="#1A5FFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- pontos -->
+      ${pts.map((p,i)=>vals[i]>0?`
+        <circle cx="${p.x}" cy="${p.y}" r="4" fill="#1A5FFF" stroke="var(--card)" stroke-width="2"/>
+        <text x="${p.x}" y="${p.y-8}" font-size="8.5" fill="var(--cyan)" text-anchor="middle" font-weight="700">${vals[i]}</text>`:'').join('')}
+      <!-- eixo X -->
+      ${all.map((m,i)=>{
+        const x=PAD_L+(i/(all.length-1||1))*cw;
+        return `<text x="${x}" y="${H-3}" font-size="8" fill="rgba(255,255,255,.35)" text-anchor="middle">${m}</text>`;
+      }).join('')}
+    </svg>`;
+  }
+
+  // ── Gráfico donut status (SVG) ──────────────────────────────────────────
+  function svgDonut(){
+    const STATUS_COLORS={
+      'EM ANDAMENTO':'#1A5FFF','FASE PREPARATÓRIA':'#D97706',
+      'CONCLUÍDO':'#00C87A','AGUARDANDO':'#7C5CF6','SUSPENSO':'#FF3D3D'
+    };
+    const entries = Object.entries(porStatus);
+    const sum = entries.reduce((a,[,v])=>a+v,0)||1;
+    const R=45,CX=60,CY=60,W=160,H=120;
+    let angle=-Math.PI/2;
+    const slices = entries.map(([s,v])=>{
+      const slice={s,v,start:angle,sweep:(v/sum)*2*Math.PI};
+      angle+=slice.sweep;
+      return slice;
+    });
+    function polar(a,r){return{x:CX+r*Math.cos(a),y:CY+r*Math.sin(a)};}
+    const paths = slices.map(sl=>{
+      if(sl.sweep<0.01) return '';
+      const s=polar(sl.start,R),e=polar(sl.start+sl.sweep,R);
+      const s2=polar(sl.start,26),e2=polar(sl.start+sl.sweep,26);
+      const lg=sl.sweep>Math.PI?1:0;
+      const col=STATUS_COLORS[sl.s]||'#888';
+      return `<path d="M${s.x},${s.y} A${R},${R} 0 ${lg} 1 ${e.x},${e.y} L${e2.x},${e2.y} A26,26 0 ${lg} 0 ${s2.x},${s2.y} Z"
+        fill="${col}" opacity="0.9" stroke="var(--card)" stroke-width="1.5"/>`;
+    });
+    const legend = entries.map(([s,v],i)=>{
+      const col=STATUS_COLORS[s]||'#888';
+      const pct=Math.round((v/sum)*100);
+      return `<g transform="translate(0,${i*16})">
+        <rect width="8" height="8" rx="2" fill="${col}" y="1"/>
+        <text x="12" y="9" font-size="9" fill="rgba(255,255,255,.7)">${s.length>14?s.slice(0,14)+'…':s} (${v})</text>
+      </g>`;
+    });
+    return `<svg viewBox="0 0 ${W} ${H}" style="height:120px">
+      <text x="${CX}" y="${CY+4}" text-anchor="middle" font-size="15" font-weight="800" fill="white" font-family="Rajdhani">${sum}</text>
+      <text x="${CX}" y="${CY+15}" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.4)">TOTAL</text>
+      ${paths.join('')}
+      <g transform="translate(${CX*2+10},6)">${legend.join('')}</g>
+    </svg>`;
+  }
+
+  // ── Barras horizontais tipo ─────────────────────────────────────────────
+  function tiposBars(){
+    const TIPO_COR={'AQUISIÇÃO':'#1A5FFF','LICITAÇÃO':'#00C87A','OBRA/SERVIÇO':'#C8991A','OUTROS':'#7C5CF6'};
+    const entries = Object.entries(porTipo).sort((a,b)=>b[1]-a[1]);
+    const maxV = Math.max(...entries.map(([,v])=>v),1);
+    return entries.map(([t,v])=>{
+      const pct=Math.round((v/maxV)*100);
+      const col=TIPO_COR[t]||'#5B9BFF';
+      return `<div class="dp-bar-row">
+        <div class="dp-bar-lbl">${escHtml(t)}</div>
+        <div class="dp-bar-bg">
+          <div class="dp-bar-fill" style="width:${pct}%;background:${col}">
+            <span class="dp-bar-n">${v}</span>
+          </div>
+        </div>
+        <span class="dp-bar-pct">${Math.round((v/todos.length||1)*100)}%</span>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Responsáveis ────────────────────────────────────────────────────────
+  function respCards(){
+    const COLORS=['#1A5FFF','#00C87A','#C8991A','#7C5CF6','#FF8C00','#00CFFF','#FF3D3D'];
+    const entries = Object.entries(porResp).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    const maxV = Math.max(...entries.map(([,v])=>v),1);
+    return entries.map(([r,v],i)=>{
+      const col=COLORS[i%COLORS.length];
+      const ini=(r.split(' ').filter(w=>w.length>2)[0]||r).slice(0,2).toUpperCase();
+      const pct=Math.round((v/maxV)*100);
+      return `<div class="dp-resp-row">
+        <div class="dp-resp-avatar" style="background:${col}22;border:1.5px solid ${col}44;color:${col}">${ini}</div>
+        <div style="flex:1;min-width:0">
+          <div class="dp-resp-nome">${escHtml(r)}</div>
+          <div class="dp-resp-minibar" style="width:${pct}%;background:${col};opacity:.6"></div>
+        </div>
+        <div class="dp-resp-count" style="color:${col}">${v}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── SLA ring SVG ────────────────────────────────────────────────────────
+  function slaRing(){
+    const R=38,CX=50,CY=50,circ=2*Math.PI*R;
+    const offset=circ*(1-slaOk/100);
+    const col=slaOk>=85?'#00C87A':slaOk>=60?'#FF8C00':'#FF3D3D';
+    return `<svg viewBox="0 0 100 100" style="height:100px;max-width:100px">
+      <circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="9"/>
+      <circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${col}" stroke-width="9"
+        stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
+        stroke-linecap="round" transform="rotate(-90 ${CX} ${CY})"/>
+      <text x="${CX}" y="${CY+4}" text-anchor="middle" font-size="16" font-weight="800" fill="white" font-family="Rajdhani">${slaOk}%</text>
+      <text x="${CX}" y="${CY+16}" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.4)">SLA</text>
+    </svg>`;
+  }
+
+  // ── Cards de processo (grid) ─────────────────────────────────────────────
+  function procCards(){
+    if(filtrados.length===0) return `<div class="empty"><span class="empty-ico">📋</span>Nenhum processo encontrado com os filtros selecionados.</div>`;
+    const STATUS_COR={'EM ANDAMENTO':'#1A5FFF','FASE PREPARATÓRIA':'#D97706','CONCLUÍDO':'#00C87A','AGUARDANDO':'#7C5CF6','SUSPENSO':'#FF3D3D'};
+    return filtrados.map(p=>{
+      const cor=STATUS_COR[p.status]||'#888';
+      const dias=diasRestantes(p.prazo,p.status);
+      const pillPrazo=prazoPillDash(dias);
+      const c=PR_CFG[p.status]||{};
+      const pi=PI_CFG[p.prio]||{};
+      const isSei=p._src==='SEI';
+      return `
+      <div class="dp-proc-card" onclick="Render._dpDetail('${p.id||p.numero}','${p._src||'LOCAL'}')" title="Clique para ver detalhes completos">
+        <div class="dp-proc-card-top">
+          <div class="dp-proc-card-stripe" style="background:${cor}"></div>
+          <div class="dp-proc-card-body">
+            <div class="dp-proc-card-num">${escHtml(p.numero)}</div>
+            <div class="dp-proc-card-title">${escHtml(p.assunto)}</div>
+            <div class="dp-proc-card-tags">
+              <span class="pill ${c.cls||''}">${p.status}</span>
+              <span class="pill ${pi.cls||''}">${p.prio||'—'}</span>
+              <span class="pill" style="background:var(--hover);color:var(--muted)">${p.tipo||'—'}</span>
+              ${isSei?`<span class="pill" style="background:rgba(200,153,26,.12);color:#C8991A;border:1px solid rgba(200,153,26,.3)">🔗 SEI</span>`:''}
+            </div>
+            <div class="dp-proc-card-meta">
+              <span>👤 ${escHtml(p.resp||'—')}</span>
+              <span>📅 ${escHtml(p.criado||'—')}</span>
+              <span>📁 ${escHtml(p.tipo||'—')}</span>
+              <span>⏰ ${escHtml(p.prazo||'—')}</span>
+            </div>
+          </div>
+        </div>
+        <div class="dp-proc-card-footer">
+          <span class="dp-proc-card-resp">👤 ${escHtml((p.resp||'').split(' ').slice(0,3).join(' '))}</span>
+          ${pillPrazo}
+          <span style="font-size:11px;color:var(--muted);opacity:.7">›</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Alertas HTML ─────────────────────────────────────────────────────────
+  function alertasHtml(){
+    if(alertas.length===0) return `<div class="dp-alert-row dp-al-info"><span class="dp-alert-ico">✅</span><div><div class="dp-alert-title">Nenhum alerta crítico</div><div class="dp-alert-sub">Todos os processos estão dentro do prazo.</div></div></div>`;
+    return alertas.slice(0,6).map(({tipo,p,d})=>{
+      const cls=tipo==='critico'?'dp-al-critico':'dp-al-atencao';
+      const ico=tipo==='critico'?'🔴':'⚠️';
+      const msg=d<0?`Atrasado há ${Math.abs(d)} dias`:`Vence em ${d} dias`;
+      return `<div class="dp-alert-row ${cls}">
+        <span class="dp-alert-ico">${ico}</span>
+        <div style="flex:1;min-width:0">
+          <div class="dp-alert-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(p.assunto)}</div>
+          <div class="dp-alert-sub">${escHtml(p.numero)} · ${escHtml(p.resp||'—')} · ${msg}</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();Render._dpDetail('${p.id||p.numero}','${p._src||'LOCAL'}')">Ver</button>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Totais filtrados label ─────────────────────────────────────────────
+  const tiposUnicos = [...new Set(todos.map(p=>p.tipo||'OUTROS'))];
+
+  // ── Render final ──────────────────────────────────────────────────────
+  document.getElementById('s-dashproc').innerHTML = `
+    <!-- KPI strip -->
+    <div class="dp-kpi-grid">
+      <div class="dp-kpi" onclick="Render._dpSetFiltro('TODOS')" style="--kc:#00CFFF">
+        <div style="after-content:'' border-top:3px solid var(--cyan)"></div>
+        <div class="dp-kpi-ico">📋</div>
+        <div class="dp-kpi-val" style="color:var(--cyan)">${total}</div>
+        <div class="dp-kpi-lbl">Total de Processos</div>
+        <div class="dp-kpi-sub">${proc.length} local · ${sei.length} SEI</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--az))"></div>
+      </div>
+      <div class="dp-kpi" onclick="Render._dpSetFiltro('EM ANDAMENTO')">
+        <div class="dp-kpi-ico">⚡</div>
+        <div class="dp-kpi-val" style="color:#1A5FFF">${ativos}</div>
+        <div class="dp-kpi-lbl">Em Andamento</div>
+        <div class="dp-kpi-sub">${total>0?Math.round((ativos/total)*100):0}% do total</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#1A5FFF"></div>
+      </div>
+      <div class="dp-kpi" onclick="Render._dpSetFiltro('FASE PREPARATÓRIA')">
+        <div class="dp-kpi-ico">🔧</div>
+        <div class="dp-kpi-val" style="color:#D97706">${fase}</div>
+        <div class="dp-kpi-lbl">Fase Preparatória</div>
+        <div class="dp-kpi-sub">ETP/TR em elaboração</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#D97706"></div>
+      </div>
+      <div class="dp-kpi" onclick="Render._dpSetFiltro('AGUARDANDO')">
+        <div class="dp-kpi-ico">⏳</div>
+        <div class="dp-kpi-val" style="color:#7C5CF6">${aguard}</div>
+        <div class="dp-kpi-lbl">Aguardando</div>
+        <div class="dp-kpi-sub">Pendentes de resposta</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#7C5CF6"></div>
+      </div>
+      <div class="dp-kpi" onclick="Render._dpSetFiltro('CONCLUÍDO')">
+        <div class="dp-kpi-ico">✅</div>
+        <div class="dp-kpi-val" style="color:#00C87A">${concl}</div>
+        <div class="dp-kpi-lbl">Concluídos</div>
+        <div class="dp-kpi-sub">${total>0?Math.round((concl/total)*100):0}% de aproveitamento</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#00C87A"></div>
+      </div>
+      <div class="dp-kpi">
+        <div class="dp-kpi-ico">🔥</div>
+        <div class="dp-kpi-val" style="color:#FF3D3D">${atrasados}</div>
+        <div class="dp-kpi-lbl">Atrasados</div>
+        <div class="dp-kpi-sub">Prazo vencido</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#FF3D3D"></div>
+      </div>
+      <div class="dp-kpi">
+        <div class="dp-kpi-ico">📛</div>
+        <div class="dp-kpi-val" style="color:#FF8C00">${venceSoon}</div>
+        <div class="dp-kpi-lbl">Vencendo em 7d</div>
+        <div class="dp-kpi-sub">Atenção imediata</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#FF8C00"></div>
+      </div>
+      <div class="dp-kpi">
+        <div class="dp-kpi-ico">🎯</div>
+        <div class="dp-kpi-val" style="color:${slaOk>=85?'#00C87A':slaOk>=60?'#FF8C00':'#FF3D3D'}">${slaOk}%</div>
+        <div class="dp-kpi-lbl">SLA no Prazo</div>
+        <div class="dp-kpi-sub">${pendente-atrasados} de ${pendente} pendentes</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${slaOk>=85?'#00C87A':slaOk>=60?'#FF8C00':'#FF3D3D'}"></div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="dp-chart-grid">
+      <!-- Linha temporal -->
+      <div class="dp-chart-box">
+        <div class="dp-chart-title">📈 Abertura de Processos por Mês</div>
+        ${svgLine()}
+      </div>
+      <!-- Donut status + SLA -->
+      <div class="dp-chart-box">
+        <div class="dp-chart-title">🎯 Distribuição por Status</div>
+        ${svgDonut()}
+      </div>
+      <!-- Tipo de processo -->
+      <div class="dp-chart-box">
+        <div class="dp-chart-title">📂 Distribuição por Tipo</div>
+        ${tiposBars()}
+      </div>
+      <!-- Carga por responsável -->
+      <div class="dp-chart-box">
+        <div class="dp-chart-title">👥 Carga por Responsável</div>
+        ${respCards()}
+      </div>
+    </div>
+
+    <!-- ALERTAS -->
+    <div class="dp-section-head">
+      <h3>🚨 Alertas Operacionais</h3>
+      <div class="dp-section-line"></div>
+      <span class="dp-section-badge">${alertas.length} alerta(s)</span>
+    </div>
+    <div style="margin-bottom:16px">${alertasHtml()}</div>
+
+    <!-- PROCESSOS DETALHADOS -->
+    <div class="dp-section-head">
+      <h3>📋 Processos — Visão Detalhada</h3>
+      <div class="dp-section-line"></div>
+      <span class="dp-section-badge">${filtrados.length} de ${total}</span>
+    </div>
+
+    <!-- Filtros -->
+    <div class="dp-filter-bar">
+      <div class="dp-search">
+        🔍<input id="dp-busca-inp" value="${escHtml(fBusca)}" placeholder="Buscar por assunto, número SEI ou responsável..."
+          oninput="Render._dpBusca(this.value)">
+      </div>
+      <select class="dp-filter-sel" onchange="DB.set('dp_fstatus',this.value);Render.dashproc()">
+        ${['TODOS','EM ANDAMENTO','FASE PREPARATÓRIA','AGUARDANDO','CONCLUÍDO','SUSPENSO'].map(s=>
+          `<option value="${s}"${fStatus===s?' selected':''}>${s==='TODOS'?'Todos os status':s}</option>`).join('')}
+      </select>
+      <select class="dp-filter-sel" onchange="DB.set('dp_fprio',this.value);Render.dashproc()">
+        ${['TODOS','ALTA','MÉDIA','BAIXA'].map(s=>
+          `<option value="${s}"${fPrio===s?' selected':''}>${s==='TODOS'?'Toda prioridade':s}</option>`).join('')}
+      </select>
+      <select class="dp-filter-sel" onchange="DB.set('dp_ftipo',this.value);Render.dashproc()">
+        <option value="TODOS"${fTipo==='TODOS'?' selected':''}>Todos os tipos</option>
+        ${tiposUnicos.map(t=>`<option value="${t}"${fTipo===t?' selected':''}>${t}</option>`).join('')}
+      </select>
+      ${(fStatus!=='TODOS'||fPrio!=='TODOS'||fTipo!=='TODOS'||fBusca)?
+        `<button class="btn btn-ghost btn-sm" onclick="Render._dpResetFiltros()">✕ Limpar filtros</button>`:''}
+    </div>
+
+    <!-- Grid de cards -->
+    <div class="dp-proc-grid">${procCards()}</div>
+
+    <div style="height:20px"></div>
+  `;
+
+  // Restaurar foco no input de busca
+  setTimeout(()=>{
+    const inp=document.getElementById('dp-busca-inp');
+    if(inp&&fBusca){inp.focus();try{inp.setSelectionRange(fBusca.length,fBusca.length);}catch(e){}}
+  },50);
+};
+
+// ── Helpers Render.dashproc ────────────────────────────────────────────────
+Render._dpSetFiltro = function(status){
+  DB.set('dp_fstatus',status);
+  Render.dashproc();
+  setTimeout(()=>{ const el=document.querySelector('.dp-proc-grid'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },100);
+};
+
+Render._dpResetFiltros = function(){
+  DB.set('dp_fstatus','TODOS');
+  DB.set('dp_fprio','TODOS');
+  DB.set('dp_ftipo','TODOS');
+  DB.set('dp_busca','');
+  Render.dashproc();
+};
+
+Render._dpBuscaTimer = null;
+Render._dpBusca = function(v){
+  clearTimeout(this._dpBuscaTimer);
+  this._dpBuscaTimer = setTimeout(()=>{
+    DB.set('dp_busca',v);
+    Render.dashproc();
+    const inp=document.getElementById('dp-busca-inp');
+    if(inp){inp.focus();const l=v.length;try{inp.setSelectionRange(l,l);}catch(e){}}
+  },280);
+};
+
+Render._dpDetail = function(id, src){
+  const proc  = DB.get('processos')||[];
+  const sei   = getSeiProcs();
+  let p;
+  if(src==='SEI'){
+    p = sei.find(x=>x.id===id||x.numero===id);
+  } else {
+    p = proc.find(x=>x.id===id) || sei.find(x=>x.id===id||x.numero===id);
+  }
+  if(!p) return;
+
+  const STATUS_COR={'EM ANDAMENTO':'#1A5FFF','FASE PREPARATÓRIA':'#D97706','CONCLUÍDO':'#00C87A','AGUARDANDO':'#7C5CF6','SUSPENSO':'#FF3D3D'};
+  const cor  = STATUS_COR[p.status]||'#888';
+  const c    = PR_CFG[p.status]||{};
+  const pi   = PI_CFG[p.prio]||{};
+  const isSei= src==='SEI';
+
+  // Dias para prazo
+  function parsePrazo(s){if(!s)return null;const pt=s.split('/');if(pt.length===3)return new Date(+pt[2],+pt[1]-1,+pt[0]);return null;}
+  function diasR(prazo,status){if(status==='CONCLUÍDO')return null;const d=parsePrazo(prazo);if(!d)return null;const h=new Date();h.setHours(0,0,0,0);return Math.round((d-h)/(86400000));}
+  const dias = diasR(p.prazo,p.status);
+  let prazoMsg='';
+  if(dias===null&&p.status==='CONCLUÍDO') prazoMsg=`<span class="dp-prazo-ok">✅ Processo concluído</span>`;
+  else if(dias!==null&&dias<0) prazoMsg=`<span class="dp-prazo-urgente">⛔ Atrasado há ${Math.abs(dias)} dias</span>`;
+  else if(dias!==null&&dias<=7) prazoMsg=`<span class="dp-prazo-alerta">⚠️ Vence em ${dias} dias</span>`;
+  else if(dias!==null) prazoMsg=`<span class="dp-prazo-ok">✅ ${dias} dias restantes</span>`;
+
+  // Linha do tempo simulada de fases
+  const FASES=[
+    {lbl:'Demanda Identificada (DFD)',     done:true,   date:p.criado||'—',                cor:'#00C87A', obs:'Demanda formal registrada na SPAEI/COE.'},
+    {lbl:'Estudo Técnico Preliminar (ETP)',done:p.status!=='FASE PREPARATÓRIA'&&p.status!=='CONCLUÍDO'?false:['CONCLUÍDO','EM ANDAMENTO','AGUARDANDO'].includes(p.status),date:p.criado||'—',cor:['CONCLUÍDO','EM ANDAMENTO','AGUARDANDO'].includes(p.status)?'#00C87A':'#888',obs:'Análise de viabilidade e especificação técnica.'},
+    {lbl:'Termo de Referência (TR)',       done:['CONCLUÍDO','EM ANDAMENTO','AGUARDANDO'].includes(p.status),date:p.status==='FASE PREPARATÓRIA'?'—':p.criado||'—',cor:['CONCLUÍDO','EM ANDAMENTO','AGUARDANDO'].includes(p.status)?'#00C87A':'#888',obs:'Especificação detalhada do objeto e condições da contratação.'},
+    {lbl:'Autorização de Abertura',        done:['CONCLUÍDO','EM ANDAMENTO'].includes(p.status),date:p.status==='EM ANDAMENTO'||p.status==='CONCLUÍDO'?p.criado||'—':'—',cor:['CONCLUÍDO','EM ANDAMENTO'].includes(p.status)?'#1A5FFF':'#888',obs:'Ordenador de despesas autoriza abertura do processo licitatório.'},
+    {lbl:'Em Andamento / Licitação',       done:p.status==='CONCLUÍDO',date:p.status==='EM ANDAMENTO'?'Em curso':p.status==='CONCLUÍDO'?p.prazo||'—':'—',cor:p.status==='CONCLUÍDO'?'#00C87A':p.status==='EM ANDAMENTO'?'#1A5FFF':'#888',obs:'Execução do processo licitatório ou contratação direta.'},
+    {lbl:'Contrato Assinado / Concluído',  done:p.status==='CONCLUÍDO',date:p.status==='CONCLUÍDO'?p.prazo||'—':'—',cor:p.status==='CONCLUÍDO'?'#00C87A':'#888',obs:'Processo encerrado com êxito.'},
+  ];
+
+  const timelineHtml = FASES.map((f,i)=>`
+    <div class="dp-tl-item">
+      <div class="dp-tl-dot-wrap">
+        <div class="dp-tl-dot" style="background:${f.done?f.cor:'transparent'};border-color:${f.cor}"></div>
+        ${i<FASES.length-1?`<div class="dp-tl-line" style="background:${f.done?f.cor+'55':'rgba(255,255,255,.07)'}"></div>`:''}
+      </div>
+      <div class="dp-tl-content">
+        <div class="dp-tl-label" style="color:${f.done?'var(--text)':'var(--muted)'}">${f.done?'✓':i+1+'.'} ${f.lbl}</div>
+        <div class="dp-tl-date">${f.date}</div>
+        <div class="dp-tl-obs">${f.obs}</div>
+      </div>
+    </div>`).join('');
+
+  Modal.open(`📋 Detalhes do Processo`,`
+    <div style="border-left:4px solid ${cor};padding-left:12px;margin-bottom:14px">
+      <div class="dp-detail-num">${escHtml(p.numero)}</div>
+      <div class="dp-detail-title">${escHtml(p.assunto)}</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">
+        <span class="pill ${c.cls||''}">${p.status}</span>
+        <span class="pill ${pi.cls||''}">${p.prio||'—'}</span>
+        <span class="pill" style="background:var(--hover);color:var(--muted)">${p.tipo||'—'}</span>
+        ${isSei?`<span class="pill" style="background:rgba(200,153,26,.15);color:#C8991A;border:1px solid rgba(200,153,26,.3)">🔗 SEI DIGITAL</span>`:''}
+        ${prazoMsg}
+      </div>
+    </div>
+
+    <div class="dp-detail-grid">
+      <div class="dp-detail-field">
+        <div class="dp-detail-field-lbl">Número SEI</div>
+        <div class="dp-detail-field-val" style="font-family:'JetBrains Mono',monospace;font-size:12px">${escHtml(p.numero)}</div>
+      </div>
+      <div class="dp-detail-field">
+        <div class="dp-detail-field-lbl">Responsável</div>
+        <div class="dp-detail-field-val">👤 ${escHtml(p.resp||'—')}</div>
+      </div>
+      <div class="dp-detail-field">
+        <div class="dp-detail-field-lbl">Data de Abertura</div>
+        <div class="dp-detail-field-val">📅 ${escHtml(p.criado||'—')}</div>
+      </div>
+      <div class="dp-detail-field">
+        <div class="dp-detail-field-lbl">Prazo Final</div>
+        <div class="dp-detail-field-val">⏰ ${escHtml(p.prazo||'—')}</div>
+      </div>
+      <div class="dp-detail-field">
+        <div class="dp-detail-field-lbl">Tipo</div>
+        <div class="dp-detail-field-val">📁 ${escHtml(p.tipo||'—')}</div>
+      </div>
+      <div class="dp-detail-field">
+        <div class="dp-detail-field-lbl">Prioridade</div>
+        <div class="dp-detail-field-val">🎯 ${escHtml(p.prio||'—')}</div>
+      </div>
+      ${p.unidade?`<div class="dp-detail-field">
+        <div class="dp-detail-field-lbl">Unidade</div>
+        <div class="dp-detail-field-val">🏛️ ${escHtml(p.unidade)}</div>
+      </div>`:''}
+      ${dias!==null?`<div class="dp-detail-field">
+        <div class="dp-detail-field-lbl">Dias Restantes</div>
+        <div class="dp-detail-field-val" style="color:${dias<0?'#FF3D3D':dias<=7?'#FF8C00':'#00C87A'}">${dias<0?'⛔ '+Math.abs(dias)+'d atrasado':dias+'d restantes'}</div>
+      </div>`:''}
+    </div>
+
+    ${p.obs||p.observacoes?`<div style="background:rgba(26,95,255,.06);border:1px solid rgba(26,95,255,.18);border-radius:9px;padding:11px 13px;margin-bottom:14px;font-size:12px;color:var(--muted);line-height:1.6">
+      <span style="font-weight:700;color:var(--text);font-size:11px;display:block;margin-bottom:4px">💬 Observações</span>
+      ${escHtml(p.obs||p.observacoes)}
+    </div>`:''}
+
+    <div style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">📍 Linha do Tempo do Processo</div>
+    <div class="dp-timeline">${timelineHtml}</div>
+
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="Modal.close()">✕ Fechar</button>
+      ${isSei?`<button class="btn btn-primary" onclick="Modal.close();Render._movSei('${p.id}')">▶️ Movimentar no SEI</button>`:''}
+      ${!isSei&&Auth.user?.admin?`<button class="btn btn-ghost" onclick="Modal.close();Render._editProc('${p.id}')">✏️ Editar Processo</button>`:''}
+    </div>
+  `);
+};
 </script>
 </body>
 </html>
