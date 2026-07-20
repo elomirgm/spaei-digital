@@ -592,7 +592,7 @@ body.member-mode #tb-title{
   font-family:'Rajdhani',sans-serif;
 }
 body.member-mode #tb-title{color:#E2EAF6}
-body.member-mode #fb-status{display:none}
+body.member-mode #fb-status{transform:scale(.85);transform-origin:right center}
 body.member-mode .tb-btn{width:38px;height:38px;font-size:19px}
 
 /* Conteúdo: feed vertical com espaço p/ barra inferior */
@@ -1457,9 +1457,37 @@ function labelPrazoCountdown(){
 // Verifica se o membro logado precisa enviar a programação desta semana
 function _precisaEnviar(){
   const u=Auth&&Auth.user;
-  if(!u||u.admin||u.chefe) return false; // ADM/Chefe não precisa enviar
-  if(prazoSemanaVencido()) return false;  // fora do prazo — não incomoda mais
+  if(!u||u.chefe) return false;           // apenas Chefe é isento (A_CRITERIO)
+  // ADM também integra a seção: recebe lembrete da própria folga.
+  // ADM não é bloqueado pelo prazo (pode marcar a qualquer momento).
+  if(!u.admin&&prazoSemanaVencido()) return false;
   return !Escala.isEnviado(u.rg);         // true se ainda não enviou
+}
+
+// ── LEMBRETE SEMANAL DO ADM (1º acesso após renovação de segunda) ──
+// Modal exibido 1x por semana, no primeiro acesso do ADM à semana nova,
+// enquanto a própria folga dele não estiver enviada.
+function _checkLembreteAdmSemanal(){
+  const u=Auth&&Auth.user;
+  if(!u||!u.admin) return;
+  if(Escala.isEnviado(u.rg)) return;
+  const key='lembreteAdm_'+getSemanaKey();          // chave por semana ISO
+  try{ if(localStorage.getItem(LS_PFX+key)) return; }catch(e){}
+  try{ localStorage.setItem(LS_PFX+key,'1'); }catch(e){}
+  Modal.open('🗓️ Nova semana — sua folga!',`
+    <div style="text-align:center;padding:6px 2px">
+      <div style="font-size:44px;margin-bottom:10px">⏰</div>
+      <div style="font-size:14px;font-weight:800;margin-bottom:8px">
+        ${u.nome.split(' ')[0]}, a escala da semana <span style="color:#C8991A">${getLabelSemana()}</span> foi renovada.
+      </div>
+      <div style="font-size:12px;line-height:1.6;opacity:.85;margin-bottom:16px">
+        Você também integra a seção — <strong>marque sua própria folga/dispensa</strong> antes de administrar as demais.
+      </div>
+      <button class="btn btn-gold" style="width:100%"
+        onclick="Modal.close();Nav.go('folgas')">📅 Marcar minha folga agora</button>
+      <button class="btn" style="width:100%;margin-top:8px;opacity:.7"
+        onclick="Modal.close()">Depois</button>
+    </div>`);
 }
 
 // Gera o HTML completo do banner de lembrete
@@ -1471,8 +1499,8 @@ function _htmlBannerLembrete(){
   <div id="banner-lembrete" role="alert" aria-live="polite">
     <div class="blb-ico">⏰</div>
     <div class="blb-corpo">
-      <div class="blb-titulo">Marque suas folgas / dispensas!</div>
-      <div class="blb-sub">Semana <strong style="color:#FFF">${semana}</strong> ainda sem programação enviada.</div>
+      <div class="blb-titulo">${Auth.user?.admin?'ADM, você também faz parte da seção — marque sua folga!':'Marque suas folgas / dispensas!'}</div>
+      <div class="blb-sub">Semana <strong style="color:#FFF">${semana}</strong> ainda sem ${Auth.user?.admin?'a sua própria programação':'programação enviada'}.</div>
       <div class="blb-cdown" id="blb-cdown-txt">⏳ ${countdown}</div>
     </div>
     <button class="blb-btn" onclick="Nav.go('folgas')">Marcar agora →</button>
@@ -2718,6 +2746,7 @@ const Render={
           </div>
         </div>
       </div>`;
+    setTimeout(_checkLembreteAdmSemanal,600); // lembrete semanal do ADM (1º acesso)
   },
 
   // ── ESCALA DE FOLGAS (DOIS PAINÉIS: SEMANA ATUAL + PRÓXIMA SEMANA) ──────
@@ -3760,9 +3789,54 @@ const Render={
     if(/^[=+\-@]/.test(s)) s="'"+s;
     return `"${s.replace(/"/g,'""')}"`;
   },
+  // ── PDF via janela de impressão formatada (offline, sem lib externa) ──
+  _pdfWindow(titulo,thead,rows,extra){
+    const w=window.open('','_blank','width=980,height=720');
+    if(!w){alert('Habilite pop-ups para gerar o PDF.');return;}
+    const dt=new Date().toLocaleString('pt-BR');
+    w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>${titulo}</title><style>
+@page{size:A4 landscape;margin:12mm}
+body{font-family:'Segoe UI',Arial,sans-serif;color:#1a1a1a;margin:0;padding:18px}
+.cab{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #C8991A;padding-bottom:10px;margin-bottom:14px}
+.cab h1{font-size:16px;margin:0}.cab .sub{font-size:10px;color:#555;margin-top:2px}
+.cab .org{font-size:10px;text-align:right;color:#555;line-height:1.5}
+table{width:100%;border-collapse:collapse;font-size:9.5px}
+th{background:#1E293B;color:#fff;padding:6px 7px;text-align:left;font-size:9px;letter-spacing:.3px}
+td{padding:5px 7px;border-bottom:1px solid #e2e8f0}
+tr:nth-child(even) td{background:#f8fafc}
+.rod{margin-top:14px;font-size:8.5px;color:#777;display:flex;justify-content:space-between}
+${extra||''}
+@media print{.noprint{display:none}}
+</style></head><body>
+<div class="cab">
+  <div><h1>${titulo}</h1><div class="sub">SPAEI DIGITAL — Seção de Projetos, Aquisições Especiais e Inovação</div></div>
+  <div class="org">COE — PMERJ<br>Gerado em ${dt}</div>
+</div>
+<table><thead><tr>${thead.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+<tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c??''}</td>`).join('')}</tr>`).join('')}</tbody></table>
+<div class="rod"><span>Documento gerado automaticamente pelo SPAEI DIGITAL</span><span>Uso interno — COE/PMERJ</span></div>
+<div class="noprint" style="text-align:center;margin-top:16px">
+  <button onclick="window.print()" style="padding:10px 26px;background:#C8991A;color:#fff;border:0;border-radius:8px;font-weight:700;cursor:pointer">🖨️ Imprimir / Salvar como PDF</button>
+</div>
+<script>setTimeout(()=>window.print(),400)<\/script></body></html>`);
+    w.document.close();
+  },
   _gerarRel(tipo,fmt){
     if(fmt==='PDF'){
-      alert('📄 PDF\n\nEm breve! No modo offline, o PDF é gerado via janela de impressão.\n\nPressione CTRL+P após fechar este aviso e selecione "Salvar como PDF".');
+      if(tipo==='escala'){
+        const ef=DB.get('efetivo')||[];
+        const allSt=Escala.getAllStatus(ef);
+        const DIAS=getDias();
+        this._pdfWindow(`Escala de Folgas — Semana ${getLabelSemana()}`,
+          ['POSTO','RG','NOME',...DIAS.map(d=>d.lbl+' '+d.dt)],
+          ef.map(m=>[m.posto,m.rg,m.nome,...(allSt[m.rg]||[]).map(s=>s||'—')]));
+      } else if(tipo==='processos'){
+        const proc=DB.get('processos')||[];
+        this._pdfWindow('Processos SEI — Situação Geral',
+          ['NÚMERO','ASSUNTO','TIPO','STATUS','RESPONSÁVEL','PRAZO','PRIORIDADE'],
+          proc.map(p=>[p.numero,p.assunto,p.tipo,p.status,p.resp,p.prazo,p.prio]));
+      }
       return;
     }
     const cf=this._csvField;
