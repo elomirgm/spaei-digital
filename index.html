@@ -7,6 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="color-scheme" content="dark">
 
 <!-- ═══ FIREBASE SDK ═══════════════════════════════════════════════════
      CONFIGURAÇÃO OBRIGATÓRIA — Siga os passos:
@@ -161,7 +162,7 @@ a{text-decoration:none;color:inherit}
 #topbar{background:rgba(5,10,19,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border2);
   padding:0 18px;height:56px;display:flex;align-items:center;gap:10px;flex-shrink:0}
-.tb-menu{background:none;border:none;color:var(--muted);display:flex;padding:4px}
+.tb-menu{background:none;border:none;color:var(--muted);display:flex;align-items:center;justify-content:center;padding:4px;min-width:32px;min-height:32px;flex-shrink:0}
 .tb-title{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;letter-spacing:1.5px;color:#FFF}
 .tb-date{font-size:10px;color:var(--muted)}
 .tb-spacer{flex:1}
@@ -912,7 +913,7 @@ body.member-mode #bottom-nav{display:flex}
   <!-- Conteúdo -->
   <div id="main">
     <header id="topbar">
-      <button class="tb-menu" onclick="UI.toggleSidebar()">☰</button>
+      <button class="tb-menu" onclick="UI.toggleSidebar()" aria-label="Abrir menu"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
       <div>
         <div class="tb-title" id="tb-title">Dashboard</div>
       </div>
@@ -982,6 +983,13 @@ body.member-mode #bottom-nav{display:flex}
 // ════════════════════════════════════════════
 // Credenciais padrão embutidas (projeto spaei-digital-coe) — funcionam em QUALQUER dispositivo.
 // localStorage ainda pode sobrescrever via painel de config (para trocar de projeto no futuro).
+// ── Acesso seguro a Web Storage ──────────────────────────────────────
+// Em alguns navegadores/celulares com cookies/dados de site bloqueados,
+// localStorage/sessionStorage lançam SecurityError de forma SÍNCRONA.
+// Sem isto, o app inteiro falhava ao carregar (tela em branco).
+function safeGet(store,k){try{return store.getItem(k);}catch(e){return null;}}
+function safeSet(store,k,v){try{store.setItem(k,v);return true;}catch(e){return false;}}
+function safeRemove(store,k){try{store.removeItem(k);}catch(e){}}
 const FB_DEFAULTS = {
   apiKey:            'AIzaSyD7jmRxODElRmpvVl8N6C8LUrNzTc-Ke7Q',
   authDomain:        'spaei-digital-coe.firebaseapp.com',
@@ -992,13 +1000,13 @@ const FB_DEFAULTS = {
   appId:             '1:441045974967:web:4c3e685b0ca218cb363232',
 };
 const FIREBASE_CONFIG = {
-  apiKey:            localStorage.getItem('SPAEI_FB_apiKey')            || FB_DEFAULTS.apiKey,
-  authDomain:        localStorage.getItem('SPAEI_FB_authDomain')        || FB_DEFAULTS.authDomain,
-  databaseURL:       localStorage.getItem('SPAEI_FB_databaseURL')       || FB_DEFAULTS.databaseURL,
-  projectId:         localStorage.getItem('SPAEI_FB_projectId')         || FB_DEFAULTS.projectId,
-  storageBucket:     localStorage.getItem('SPAEI_FB_storageBucket')     || FB_DEFAULTS.storageBucket,
-  messagingSenderId: localStorage.getItem('SPAEI_FB_messagingSenderId') || FB_DEFAULTS.messagingSenderId,
-  appId:             localStorage.getItem('SPAEI_FB_appId')             || FB_DEFAULTS.appId,
+  apiKey:            safeGet(localStorage,'SPAEI_FB_apiKey')            || FB_DEFAULTS.apiKey,
+  authDomain:        safeGet(localStorage,'SPAEI_FB_authDomain')        || FB_DEFAULTS.authDomain,
+  databaseURL:       safeGet(localStorage,'SPAEI_FB_databaseURL')       || FB_DEFAULTS.databaseURL,
+  projectId:         safeGet(localStorage,'SPAEI_FB_projectId')         || FB_DEFAULTS.projectId,
+  storageBucket:     safeGet(localStorage,'SPAEI_FB_storageBucket')     || FB_DEFAULTS.storageBucket,
+  messagingSenderId: safeGet(localStorage,'SPAEI_FB_messagingSenderId') || FB_DEFAULTS.messagingSenderId,
+  appId:             safeGet(localStorage,'SPAEI_FB_appId')             || FB_DEFAULTS.appId,
 };
 const FB_NODE = 'spaei'; // nó raiz no Realtime Database
 
@@ -1283,7 +1291,7 @@ function abrirConfiguracaoFirebase(){
     ].map(([k,lbl,ph])=>`
     <div class="form-group">
       <label class="form-lbl">${lbl}</label>
-      <input class="fb-inp-full" id="fb-${k}" value="${escHtml(localStorage.getItem('SPAEI_FB_'+k)||cfg[k]||'')}" placeholder="${ph}">
+      <input class="fb-inp-full" id="fb-${k}" value="${escHtml(safeGet(localStorage,'SPAEI_FB_'+k)||cfg[k]||'')}" placeholder="${ph}">
     </div>`).join('')}
     <div class="btn-row">
       <button class="btn btn-ghost" onclick="Modal.close()">Cancelar</button>
@@ -1297,8 +1305,8 @@ async function salvarConfigFirebase(){
   if(!db){alert('O campo "Database URL" é obrigatório.');return;}
   campos.forEach(k=>{
     const v=document.getElementById('fb-'+k).value.trim();
-    if(v) localStorage.setItem('SPAEI_FB_'+k,v);
-    else localStorage.removeItem('SPAEI_FB_'+k);
+    if(v) safeSet(localStorage,'SPAEI_FB_'+k,v);
+    else safeRemove(localStorage,'SPAEI_FB_'+k);
     FIREBASE_CONFIG[k]=v;
   });
   Modal.close();
@@ -2182,7 +2190,7 @@ const Auth={
 
   _finalizarLogin(militar){
     this.user={...militar};
-    sessionStorage.setItem(this.SESSION_KEY,JSON.stringify(this.user));
+    safeSet(sessionStorage,this.SESSION_KEY,JSON.stringify(this.user));
     const logs=DB.get('logs')||[];
     logs.unshift({dt:new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),
       tipo:'LOGIN',desc:`${militar.posto} ${militar.nome} acessou (RG ${militar.rg})`});
@@ -2265,7 +2273,7 @@ const Auth={
 
   logout(){
     if(!confirm('Deseja sair do SPAEI DIGITAL?'))return;
-    sessionStorage.removeItem(this.SESSION_KEY);
+    safeRemove(sessionStorage,this.SESSION_KEY);
     this.user=null;
     document.body.classList.remove('member-mode');
     const _bn=document.getElementById('bottom-nav');if(_bn)_bn.innerHTML='';
@@ -2281,7 +2289,7 @@ const Auth={
   },
 
   restore(){
-    const raw=sessionStorage.getItem(this.SESSION_KEY);
+    const raw=safeGet(sessionStorage,this.SESSION_KEY);
     if(raw){this.user=JSON.parse(raw);return true;}
     return false;
   }
